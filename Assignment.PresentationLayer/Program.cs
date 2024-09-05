@@ -1,3 +1,5 @@
+using DataAccessLayer.Data;
+
 namespace Assignment.PresentationLayer
 {
     public class Program
@@ -8,6 +10,7 @@ namespace Assignment.PresentationLayer
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<DataContext>();
 
             var app = builder.Build();
 
