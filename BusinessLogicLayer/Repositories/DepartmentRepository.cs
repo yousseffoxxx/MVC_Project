@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogicLayer.Repositories
 {
-    internal class DepartmentRepository
+    public class DepartmentRepository : IDepartmentRepository
     {
         // Dependency Injection
         // Method Injection => Method ([FromServices]DataContext dataContect)
@@ -30,8 +30,8 @@ namespace BusinessLogicLayer.Repositories
         */
 
         public Department? Get(int id) => _dataContext.Deprtments.Find(id);
-        public IEnumerable< Department> GetAll() => _dataContext.Deprtments.ToList();
-        
+        public IEnumerable<Department> GetAll() => _dataContext.Deprtments.ToList();
+
         public int Create(Department entity)
         {
             _dataContext.Deprtments.Add(entity);

@@ -14,12 +14,6 @@ namespace DataAccessLayer.Data
         {
         }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseSqlServer("ConnectionString");
-        //}
-
-
         public DbSet<Department> Deprtments { get; set; }
     }
 }
