@@ -11,10 +11,6 @@ namespace BusinessLogicLayer.Repositories
 {
     internal class DepartmentRepository
     {
-        /*
-         * Get , Get All , Create , Apdate , Delete
-         */
-
         // Dependency Injection
         // Method Injection => Method ([FromServices]DataContext dataContect)
         // Property Injection =>
@@ -29,11 +25,27 @@ namespace BusinessLogicLayer.Repositories
             _dataContext = dataContext;
         }
 
-        //private DataContext dataContext { get; set; } // Hard Codded Dependency
+        /*
+        * Get , Get All , Create , Apdate , Delete
+        */
 
-        //public Department Get(int id)
-        //{
-        //    _dataContext.Deprtments.FirstOrDefault();
-        //}
+        public Department? Get(int id) => _dataContext.Deprtments.Find(id);
+        public IEnumerable< Department> GetAll() => _dataContext.Deprtments.ToList();
+        
+        public int Create(Department entity)
+        {
+            _dataContext.Deprtments.Add(entity);
+            return _dataContext.SaveChanges();
+        }
+        public int Update(Department entity)
+        {
+            _dataContext.Deprtments.Update(entity);
+            return _dataContext.SaveChanges();
+        }
+        public int Delete(Department entity)
+        {
+            _dataContext.Deprtments.Remove(entity);
+            return _dataContext.SaveChanges();
+        }
     }
 }
