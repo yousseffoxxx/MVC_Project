@@ -31,9 +31,9 @@ namespace BusinessLogicLayer.Repositories
 
         //private DataContext dataContext { get; set; } // Hard Codded Dependency
 
-        public Department Get(int id)
-        {
-            _dataContext.Deprtments.FirstOrDefault();
-        }
+        //public Department Get(int id)
+        //{
+        //    _dataContext.Deprtments.FirstOrDefault();
+        //}
     }
 }
