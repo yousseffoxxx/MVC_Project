@@ -29,7 +29,7 @@
                     <td>@item.Name</td>
                     <td>@item.CDate</td>
 
-                    <td><a asp-action="Details">Details</a></td>
+                    <td><a asp-action="Details" class="btn btn-warning" asp-route-id="@item.Id"><i class="fas fa-eye"></i>Details</a></td>
                     <td><a asp-action="Edit">Edit</a></td>
                     <td><a asp-action="Delete">Delete</a></td>
                 </tr>
