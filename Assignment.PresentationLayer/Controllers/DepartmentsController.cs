@@ -21,7 +21,6 @@ namespace PresentationLayer.Controllers
             return View(departments);
         }
 
-        [HttpPost]
         public IActionResult Create(Department department) 
         {
             //server side validation
@@ -74,6 +73,26 @@ namespace PresentationLayer.Controllers
                 }
             }
             return View(department);
+        }
+        public IActionResult Delete(int? id)
+        {
+
+            if (!id.HasValue) return BadRequest();
+
+            var department = _repository.Get(id.Value);
+
+            if(department is null) return NotFound();
+
+            return View(department);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Department department)
+        {
+
+            if (!ModelState.IsValid) return View(department);
+            _repository.Delete(department);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
