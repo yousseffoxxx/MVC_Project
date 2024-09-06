@@ -21,11 +21,6 @@ namespace PresentationLayer.Controllers
             return View(departments);
         }
 
-        public IActionResult Create() 
-        { 
-            return View();
-        }
-
         [HttpPost]
         public IActionResult Create(Department department) 
         {
@@ -44,6 +39,40 @@ namespace PresentationLayer.Controllers
 
             if(department is null) return NotFound();
 
+            return View(department);
+        }
+        public IActionResult Edit(int? id)
+        {
+            // Retrieve Department And Send it to the View
+
+            if (!id.HasValue) return BadRequest();
+
+            var department = _repository.Get(id.Value);
+
+            if(department is null) return NotFound();
+
+            return View(department);
+        }
+
+        [HttpPost]
+        public IActionResult Edit([FromRoute]int id,Department department)
+        {
+            if (id != department.Id) return BadRequest();
+
+            if (!ModelState.IsValid)
+            {
+                try
+                {
+                    _repository.Update(department);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    // log Exception
+                    ModelState.AddModelError("", ex.Message);
+
+                }
+            }
             return View(department);
         }
     }
