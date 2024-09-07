@@ -1,3 +1,7 @@
+using BusinessLogicLayer.Repositories;
+using DataAccessLayer.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace Assignment.PresentationLayer
 {
     public class Program
@@ -8,7 +12,15 @@ namespace Assignment.PresentationLayer
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            //builder.Services.AddScoped<DataContext>();
 
+            builder.Services.AddDbContext<DataContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>();
+           
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
