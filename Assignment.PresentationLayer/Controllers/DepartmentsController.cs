@@ -74,6 +74,7 @@ namespace PresentationLayer.Controllers
             }
             return View(department);
         }
+
         public IActionResult Delete(int? id)
         {
 
@@ -86,13 +87,26 @@ namespace PresentationLayer.Controllers
             return View(department);
         }
 
-        [HttpPost]
-        public IActionResult Delete(Department department)
+        [HttpPost, ActionName("Delete")]
+        public IActionResult ConfirmDelete(int? id)
         {
 
-            if (!ModelState.IsValid) return View(department);
-            _repository.Delete(department);
-            return RedirectToAction(nameof(Index));
+            if (!id.HasValue) return BadRequest();
+
+            var department = _repository.Get(id.Value);
+
+            if (department is null) return NotFound();
+            try
+            {
+                _repository.Delete(department);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(department);
+            }
         }
     }
 }
