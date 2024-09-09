@@ -1,19 +1,7 @@
-﻿using DataAccessLayer.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BusinessLogicLayer.Interfaces
+﻿namespace BusinessLogicLayer.Interfaces
 {
-    public interface IEmployeeRepository
+    public interface IEmployeeRepository : IGenaricRepository<Employee>
     {
-        int Create(Employee entity);
-        int Delete(Employee entity);
-        Employee? Get(int id);
-        IEnumerable<Employee> GetAll();
-        int Update(Employee entity);
-
+        public IEnumerable<Employee> GetAll(string Address);
     }
 }

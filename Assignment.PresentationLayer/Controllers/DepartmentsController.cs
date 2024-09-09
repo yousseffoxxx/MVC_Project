@@ -1,16 +1,14 @@
-﻿using BusinessLogicLayer.Interfaces;
-using DataAccessLayer.Models;
-using Microsoft.AspNetCore.Mvc;
-
-namespace PresentationLayer.Controllers
+﻿namespace PresentationLayer.Controllers
 {
     public class DepartmentsController : Controller
     {
-        private readonly IDepartmentRepository _repository;
+        //private IGenaricRepository<Department> _repository;
 
-        public DepartmentsController(IDepartmentRepository departmentRepository)
+        private IDepartmentRepository _repository;
+
+        public DepartmentsController(IDepartmentRepository Repository)
         {
-            _repository = departmentRepository;
+            _repository = Repository;
         }
 
         [HttpGet]
