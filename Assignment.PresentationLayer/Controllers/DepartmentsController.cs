@@ -21,6 +21,9 @@ namespace PresentationLayer.Controllers
             return View(departments);
         }
 
+        public IActionResult Create() => View();
+
+        [HttpPost]
         public IActionResult Create(Department department) 
         {
             //server side validation
@@ -28,32 +31,13 @@ namespace PresentationLayer.Controllers
             _repository.Create(department);
             return RedirectToAction(nameof(Index));
         }
-        public IActionResult Details(int? id)
-        {
-            // Retrieve Department And Send it to the View
 
-            if (!id.HasValue) return BadRequest();
+        public IActionResult Details(int? id) => DepartmentControllerHandler(id, nameof(Details));
 
-            var department = _repository.Get(id.Value);
-
-            if(department is null) return NotFound();
-
-            return View(department);
-        }
-        public IActionResult Edit(int? id)
-        {
-            // Retrieve Department And Send it to the View
-
-            if (!id.HasValue) return BadRequest();
-
-            var department = _repository.Get(id.Value);
-
-            if(department is null) return NotFound();
-
-            return View(department);
-        }
+        public IActionResult Edit(int? id) => DepartmentControllerHandler(id, nameof(Edit));
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Edit([FromRoute]int id,Department department)
         {
             if (id != department.Id) return BadRequest();
@@ -69,23 +53,12 @@ namespace PresentationLayer.Controllers
                 {
                     // log Exception
                     ModelState.AddModelError("", ex.Message);
-
                 }
             }
             return View(department);
         }
 
-        public IActionResult Delete(int? id)
-        {
-
-            if (!id.HasValue) return BadRequest();
-
-            var department = _repository.Get(id.Value);
-
-            if(department is null) return NotFound();
-
-            return View(department);
-        }
+        public IActionResult Delete(int? id) => DepartmentControllerHandler(id,nameof(Delete));
 
         [HttpPost, ActionName("Delete")]
         public IActionResult ConfirmDelete(int? id)
@@ -96,6 +69,7 @@ namespace PresentationLayer.Controllers
             var department = _repository.Get(id.Value);
 
             if (department is null) return NotFound();
+
             try
             {
                 _repository.Delete(department);
@@ -107,6 +81,18 @@ namespace PresentationLayer.Controllers
                 ModelState.AddModelError(string.Empty, ex.Message);
                 return View(department);
             }
+        }
+
+        private IActionResult DepartmentControllerHandler(int? id , string viewName)
+        {
+
+            if (!id.HasValue) return BadRequest();
+
+            var department = _repository.Get(id.Value);
+
+            if (department is null) return NotFound();
+
+            return View(viewName, department);
         }
     }
 }
