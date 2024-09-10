@@ -14,6 +14,10 @@
         [HttpGet]
         public IActionResult Index()
         {
+            // ViewData => Dictionary<String,object>
+
+            ViewData["Message"] = "Hello From viewData";
+
             // Retrieve All Departments
             var departments = _repository.GetAll();
             return View(departments);

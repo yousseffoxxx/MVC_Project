@@ -15,6 +15,12 @@ namespace PresentationLayer.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            //ViewData["Message"] = new Employee { Name = "Youssef" };
+
+            //C# 4 Feature ViewBag
+
+            //ViewBag.Department = new Department { Name = "IT" };
+
             var departments = _repository.GetAll();
             return View(departments);
         }
@@ -45,7 +51,8 @@ namespace PresentationLayer.Controllers
             }
             try
             {
-                _repository.Update(employee);
+                if (_repository.Update(employee) > 0)
+                    TempData["Message"] = "Employee Updated Successfuly";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
