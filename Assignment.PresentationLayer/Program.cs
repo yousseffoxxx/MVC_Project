@@ -18,6 +18,7 @@ namespace Assignment.PresentationLayer
             //builder.Services.AddScoped<IGenaricRepository<Department>, GenaricRepository<Department>>();
 
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
             var app = builder.Build();
 

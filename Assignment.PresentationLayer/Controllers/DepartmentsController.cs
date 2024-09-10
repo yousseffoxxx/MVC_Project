@@ -42,16 +42,17 @@
 
             if (!ModelState.IsValid)
             {
-                try
-                {
-                    _repository.Update(department);
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (Exception ex)
-                {
-                    // log Exception
-                    ModelState.AddModelError("", ex.Message);
-                }
+                return View(department);
+            }
+            try
+            {
+                _repository.Update(department);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                // log Exception
+                ModelState.AddModelError("", ex.Message);
             }
             return View(department);
         }
@@ -59,6 +60,7 @@
         public IActionResult Delete(int? id) => DepartmentControllerHandler(id,nameof(Delete));
 
         [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public IActionResult ConfirmDelete(int? id)
         {
 
