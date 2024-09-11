@@ -1,51 +1,32 @@
-﻿using DataAccessLayer.Data;
-using DataAccessLayer.Models;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace BusinessLogicLayer.Repositories
 {
-    public class DepartmentRepository : IDepartmentRepository
+    public class DepartmentRepository : GenaricRepository<Department>, IDepartmentRepository
     {
-        // Dependency Injection
-        // Method Injection => Method ([FromServices]DataContext dataContect)
-        // Property Injection =>
-        //[FromServices]
-        //public int MyProperty { get; set; }
-
-
-        private readonly DataContext _dataContext;
-        //CTOR Injection 
-        public DepartmentRepository(DataContext dataContext)
-        {
-            _dataContext = dataContext;
-        }
-
         /*
-        * Get , Get All , Create , Apdate , Delete
+         //// Dependency Injection
+         //// Method Injection => Method ([FromServices]DataContext dataContect)
+         //// Property Injection =>
+         ////[FromServices]
+         ////public int MyProperty { get; set; }
+
+
+         //private readonly DataContext _dataContext;
+         ////CTOR Injection 
+         //public DepartmentRepository(DataContext dataContext)
+         //{
+         //    _dataContext = dataContext;
+         //}
         */
 
-        public Department? Get(int id) => _dataContext.Deprtments.Find(id);
-        public IEnumerable<Department> GetAll() => _dataContext.Deprtments.ToList();
+        public DepartmentRepository(DataContext dataContext) : base(dataContext)
+        {
 
-        public int Create(Department entity)
-        {
-            _dataContext.Deprtments.Add(entity);
-            return _dataContext.SaveChanges();
         }
-        public int Update(Department entity)
+
+        public IEnumerable<Department> GetAll(string name)
         {
-            _dataContext.Deprtments.Update(entity);
-            return _dataContext.SaveChanges();
-        }
-        public int Delete(Department entity)
-        {
-            _dataContext.Deprtments.Remove(entity);
-            return _dataContext.SaveChanges();
+            return _dbSet.Where(d => d.Name == name).ToList();
         }
     }
 }

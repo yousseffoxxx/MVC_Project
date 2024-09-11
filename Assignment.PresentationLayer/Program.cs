@@ -1,7 +1,3 @@
-using BusinessLogicLayer.Repositories;
-using DataAccessLayer.Data;
-using Microsoft.EntityFrameworkCore;
-
 namespace Assignment.PresentationLayer
 {
     public class Program
@@ -19,8 +15,11 @@ namespace Assignment.PresentationLayer
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>();
-           
+            //builder.Services.AddScoped<IGenaricRepository<Department>, GenaricRepository<Department>>();
+
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

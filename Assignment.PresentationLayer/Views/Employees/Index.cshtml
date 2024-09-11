@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Employee>
+@{
+    ViewData["Title"] = "Index";
+    // var employee2 = ViewData["Message"] as Employee;
+}
+
+@* <h1> @employee2.Name </h1> *@
+@* <h1> @ViewBag.Department.Name </h1> *@
+
+<h1 class="alert-success">@TempData["message"]</h1>
+<div>
+    <a class="btn btn-primary me-3" asp-action="Create">Create New Employee</a>
+</div>
+
+@if (Model.Any())
+{
+    <h1>All Employees</h1>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <td>@Html.DisplayNameFor(e=>e.Name)</td>
+                <td>@Html.DisplayNameFor(e=>e.Age)</td>
+                <td>@Html.DisplayNameFor(e=>e.Address)</td>
+                <td>@Html.DisplayNameFor(e=>e.Salary)</td>
+                <td>@Html.DisplayNameFor(e=>e.Email)</td>
+                <td>@Html.DisplayNameFor(e=>e.Phone)</td>
+                <td>@Html.DisplayNameFor(e=>e.IsActive)</td>
+
+                <td>Details</td>
+                <td>Edit</td>
+                <td>delete</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Age</td>
+                    <td>@item.Address</td>
+                    <td>@Html.DisplayFor(e => item.Salary)</td>
+                    <td>@Html.DisplayFor(e => item.Email)</td>
+                    <td>@item.Phone</td>
+                    <td>
+                        @if (item.IsActive)
+                        {
+                            <i class="fa-solid fa-circle" style="color:green"></i>
+                        }
+                        else
+                        {
+                            <i class="fa-solid fa-circle" style="color:red"></i>
+
+                        }
+                    </td>
+
+                    <partial name="_ButtonsPartial" model="item.Id"></partial>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+else
+{
+    <div class="mt-5 alert-warning">
+        <h2>No Employees</h2>
+    </div>
+}
