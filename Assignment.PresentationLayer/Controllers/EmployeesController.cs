@@ -1,5 +1,6 @@
 ﻿using DataAccessLayer.Models;
 using Microsoft.AspNetCore.Mvc;
+using PresentationLayer.ViewModels;
 
 namespace PresentationLayer.Controllers
 {
@@ -16,19 +17,18 @@ namespace PresentationLayer.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]        public IActionResult Index()
-
+        [HttpGet]        
+        public IActionResult Index(string? searchValue)
         {
-            //ViewData["Message"] = new Employee { Name = "Youssef" };
+            var employees = Enumerable.Empty<Employee>();
 
-            //C# 4 Feature ViewBag
+            if (string.IsNullOrWhiteSpace(searchValue))
+                 employees = _employeerepository.GetAllWithDepartment();
 
-            //ViewBag.Department = new Department { Name = "IT" };
-
-            var employees = _employeerepository.GetAllWithDepartment();
+            else employees = _employeerepository.GetAll(searchValue);
 
             var employeeViewModel = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
-            
+
             return View(employeeViewModel);
         }
 
