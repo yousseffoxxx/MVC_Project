@@ -37,9 +37,14 @@
         [HttpPost]
         public IActionResult Create(EmployeeViewModel employeeVM)
         {
-            var employee = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
 
             if (!ModelState.IsValid) return View(employeeVM);
+
+            if(employeeVM.Image is not null)
+                employeeVM.ImageNamep = DocumentSittings.UploadFile(employeeVM.Image , "images");
+           
+            var employee = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
+            
             _unitOfWork.Employees.Create(employee);
             _unitOfWork.SaveChanges();
 
@@ -62,6 +67,9 @@
             }
             try
             {
+                if (employeeVM.Image is not null)
+                    employeeVM.ImageNamep = DocumentSittings.UploadFile(employeeVM.Image, "images");
+
                 var employee = _mapper.Map<EmployeeViewModel,Employee>(employeeVM);
 
                 _unitOfWork.Employees.Update(employee);
@@ -94,7 +102,11 @@
             try
             {
                 _unitOfWork.Employees.Delete(employee);
-                _unitOfWork.SaveChanges();
+                if (_unitOfWork.SaveChanges() > 0 && employee.ImageName is not null)
+                {
+                    DocumentSittings.DeleteFile("Images" , employee.ImageName);
+                }
+                
 
                 return RedirectToAction(nameof(Index));
             }

@@ -13,7 +13,7 @@
 
             // Create Unique Name for the File
 
-            string fileName = $"{Guid.NewGuid}-{file.FileName}";
+            string fileName = $"{Guid.NewGuid()}-{file.FileName}";
 
             // create file Path
             //  //E:/NewFolder/MvcDemoSln/Demo.PL/www.root/Files/folderName/Image.Png
