@@ -21,6 +21,12 @@
     <span asp-validation-for="Salary" class="text-danger"></span>
 </div>
 <div class="form-group">
+    <label asp-for="Department"></label>
+    <select class="form-control" asp-items="ViewBag.Departments" asp-for="DepartmentId">
+        <option value="@null" class="text-center">Select Department</option>
+    </select>
+</div>
+<div class="form-group">
     <label asp-for="Email"></label>
     <input class=" form-control" asp-for="Email" />
     <span asp-validation-for="Email" class="text-danger"></span>

@@ -5,11 +5,13 @@ namespace PresentationLayer.Controllers
 {
     public class EmployeesController : Controller
     {
-        private IEmployeeRepository _repository;
+        private IEmployeeRepository _employeerepository;
+        private IDepartmentRepository _departmentRepository;
 
-        public EmployeesController(IEmployeeRepository Repository)
+        public EmployeesController(IEmployeeRepository EmployeeRepository, IDepartmentRepository departmentRepository)
         {
-            _repository = Repository;
+            _employeerepository = EmployeeRepository;
+            _departmentRepository = departmentRepository;
         }
 
         [HttpGet]
@@ -21,17 +23,23 @@ namespace PresentationLayer.Controllers
 
             //ViewBag.Department = new Department { Name = "IT" };
 
-            var departments = _repository.GetAll();
+            var departments = _employeerepository.GetAllWithDepartment();
             return View(departments);
         }
 
-        public IActionResult Create() => View();
+        public IActionResult Create()
+        {
+            var departments = _departmentRepository.GetAll();
+            SelectList listItems = new SelectList(departments , "Id", "Name");
+            ViewBag.Departments = listItems;
+            return View();
+        }
 
         [HttpPost]
         public IActionResult Create(Employee employee)
         {
             if (!ModelState.IsValid) return View(employee);
-            _repository.Create(employee);
+                _employeerepository.Create(employee);
             return RedirectToAction(nameof(Index));
         }
 
@@ -51,7 +59,7 @@ namespace PresentationLayer.Controllers
             }
             try
             {
-                if (_repository.Update(employee) > 0)
+                if (_employeerepository.Update(employee) > 0)
                     TempData["Message"] = "Employee Updated Successfuly";
                 return RedirectToAction(nameof(Index));
             }
@@ -72,13 +80,13 @@ namespace PresentationLayer.Controllers
 
             if (!id.HasValue) return BadRequest();
 
-            var employee = _repository.Get(id.Value);
+            var employee = _employeerepository.Get(id.Value);
 
             if (employee is null) return NotFound();
 
             try
             {
-                _repository.Delete(employee);
+                _employeerepository.Delete(employee);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -92,9 +100,17 @@ namespace PresentationLayer.Controllers
         private IActionResult EmployeeControllerHandler(int? id, string viewName)
         {
 
+            if(viewName == nameof(Edit))
+            {
+
+                var departments = _departmentRepository.GetAll();
+                SelectList listItems = new SelectList(departments, "Id", "Name");
+                ViewBag.Departments = listItems;
+
+            }
             if (!id.HasValue) return BadRequest();
 
-            var employee = _repository.Get(id.Value);
+            var employee = _employeerepository.Get(id.Value);
 
             if (employee is null) return NotFound();
 
