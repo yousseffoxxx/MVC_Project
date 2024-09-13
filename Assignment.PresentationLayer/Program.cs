@@ -17,6 +17,10 @@ namespace Assignment.PresentationLayer
 
             //builder.Services.AddScoped<IGenaricRepository<Department>, GenaricRepository<Department>>();
 
+            //builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
+
+            builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 

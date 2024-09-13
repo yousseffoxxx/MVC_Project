@@ -1,7 +1,3 @@
-using Assignment.PresentationLayer.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-
 namespace Assignment.PresentationLayer.Controllers
 {
     public class HomeController : Controller

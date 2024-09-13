@@ -5,17 +5,19 @@ namespace PresentationLayer.Controllers
 {
     public class EmployeesController : Controller
     {
-        private IEmployeeRepository _employeerepository;
-        private IDepartmentRepository _departmentRepository;
+        private readonly IEmployeeRepository _employeerepository;
+        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IMapper _mapper;
 
-        public EmployeesController(IEmployeeRepository EmployeeRepository, IDepartmentRepository departmentRepository)
+        public EmployeesController(IEmployeeRepository EmployeeRepository, IDepartmentRepository departmentRepository, IMapper mapper)
         {
             _employeerepository = EmployeeRepository;
             _departmentRepository = departmentRepository;
+            _mapper = mapper;
         }
 
-        [HttpGet]
-        public IActionResult Index()
+        [HttpGet]        public IActionResult Index()
+
         {
             //ViewData["Message"] = new Employee { Name = "Youssef" };
 
@@ -23,22 +25,27 @@ namespace PresentationLayer.Controllers
 
             //ViewBag.Department = new Department { Name = "IT" };
 
-            var departments = _employeerepository.GetAllWithDepartment();
-            return View(departments);
+            var employees = _employeerepository.GetAllWithDepartment();
+
+            var employeeViewModel = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
+            
+            return View(employeeViewModel);
         }
 
         public IActionResult Create()
         {
-            var departments = _departmentRepository.GetAll();
-            SelectList listItems = new SelectList(departments , "Id", "Name");
+            var employees = _departmentRepository.GetAll();
+            SelectList listItems = new SelectList(employees, "Id", "Name");
             ViewBag.Departments = listItems;
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(Employee employee)
+        public IActionResult Create(EmployeeViewModel employeeVM)
         {
-            if (!ModelState.IsValid) return View(employee);
+            var employee = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
+
+            if (!ModelState.IsValid) return View(employeeVM);
                 _employeerepository.Create(employee);
             return RedirectToAction(nameof(Index));
         }
@@ -49,16 +56,18 @@ namespace PresentationLayer.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, Employee employee)
+        public IActionResult Edit([FromRoute] int id, EmployeeViewModel employeeVM)
         {
-            if (id != employee.Id) return BadRequest();
+            if (id != employeeVM.Id) return BadRequest();
 
             if (!ModelState.IsValid)
             {
-                return View(employee);
+                return View(employeeVM);
             }
             try
             {
+                var employee = _mapper.Map<EmployeeViewModel,Employee>(employeeVM);
+
                 if (_employeerepository.Update(employee) > 0)
                     TempData["Message"] = "Employee Updated Successfuly";
                 return RedirectToAction(nameof(Index));
@@ -67,7 +76,7 @@ namespace PresentationLayer.Controllers
             {
                 ModelState.AddModelError("", ex.Message);
             }
-            return View(employee);
+            return View(employeeVM);
         }
 
         public IActionResult Delete(int? id) => EmployeeControllerHandler(id, nameof(Delete));
@@ -114,7 +123,9 @@ namespace PresentationLayer.Controllers
 
             if (employee is null) return NotFound();
 
-            return View(viewName, employee);
+            var employeeVM = _mapper.Map<EmployeeViewModel>(employee);
+
+            return View(viewName, employeeVM);
         }
     }
 }
