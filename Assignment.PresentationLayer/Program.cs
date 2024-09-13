@@ -21,8 +21,10 @@ namespace Assignment.PresentationLayer
 
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
-            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            //builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            //builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
+            builder.Services.AddScoped<IUnitOfWork,UnitOfWorkRepository>();
 
             var app = builder.Build();
 

@@ -1,19 +1,12 @@
-﻿using DataAccessLayer.Models;
-using Microsoft.AspNetCore.Mvc;
-using PresentationLayer.ViewModels;
-
-namespace PresentationLayer.Controllers
+﻿namespace PresentationLayer.Controllers
 {
     public class EmployeesController : Controller
     {
-        private readonly IEmployeeRepository _employeerepository;
-        private readonly IDepartmentRepository _departmentRepository;
         private readonly IMapper _mapper;
-
-        public EmployeesController(IEmployeeRepository EmployeeRepository, IDepartmentRepository departmentRepository, IMapper mapper)
+        private readonly IUnitOfWork _unitOfWork;
+        public EmployeesController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _employeerepository = EmployeeRepository;
-            _departmentRepository = departmentRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -23,9 +16,9 @@ namespace PresentationLayer.Controllers
             var employees = Enumerable.Empty<Employee>();
 
             if (string.IsNullOrWhiteSpace(searchValue))
-                 employees = _employeerepository.GetAllWithDepartment();
+                 employees = _unitOfWork.Employees.GetAllWithDepartment();
 
-            else employees = _employeerepository.GetAll(searchValue);
+            else employees = _unitOfWork.Employees.GetAll(searchValue);
 
             var employeeViewModel = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
 
@@ -34,7 +27,7 @@ namespace PresentationLayer.Controllers
 
         public IActionResult Create()
         {
-            var employees = _departmentRepository.GetAll();
+            var employees = _unitOfWork.Departments.GetAll();
             SelectList listItems = new SelectList(employees, "Id", "Name");
             ViewBag.Departments = listItems;
             return View();
@@ -46,7 +39,9 @@ namespace PresentationLayer.Controllers
             var employee = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
 
             if (!ModelState.IsValid) return View(employeeVM);
-                _employeerepository.Create(employee);
+            _unitOfWork.Employees.Create(employee);
+            _unitOfWork.SaveChanges();
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -68,7 +63,9 @@ namespace PresentationLayer.Controllers
             {
                 var employee = _mapper.Map<EmployeeViewModel,Employee>(employeeVM);
 
-                if (_employeerepository.Update(employee) > 0)
+                _unitOfWork.Employees.Update(employee);
+
+                if (_unitOfWork.SaveChanges() > 0)
                     TempData["Message"] = "Employee Updated Successfuly";
                 return RedirectToAction(nameof(Index));
             }
@@ -89,13 +86,15 @@ namespace PresentationLayer.Controllers
 
             if (!id.HasValue) return BadRequest();
 
-            var employee = _employeerepository.Get(id.Value);
+            var employee = _unitOfWork.Employees.Get(id.Value);
 
             if (employee is null) return NotFound();
 
             try
             {
-                _employeerepository.Delete(employee);
+                _unitOfWork.Employees.Delete(employee);
+                _unitOfWork.SaveChanges();
+
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -112,14 +111,14 @@ namespace PresentationLayer.Controllers
             if(viewName == nameof(Edit))
             {
 
-                var departments = _departmentRepository.GetAll();
+                var departments = _unitOfWork.Departments.GetAll();
                 SelectList listItems = new SelectList(departments, "Id", "Name");
                 ViewBag.Departments = listItems;
 
             }
             if (!id.HasValue) return BadRequest();
 
-            var employee = _employeerepository.Get(id.Value);
+            var employee = _unitOfWork.Employees.Get(id.Value);
 
             if (employee is null) return NotFound();
 

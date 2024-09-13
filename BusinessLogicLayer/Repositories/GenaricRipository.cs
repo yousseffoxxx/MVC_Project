@@ -1,10 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-namespace BusinessLogicLayer.Repositories
+﻿namespace BusinessLogicLayer.Repositories
 {
     public class GenaricRepository<TEntity> : IGenaricRepository<TEntity> where TEntity : class
     {
@@ -19,25 +13,13 @@ namespace BusinessLogicLayer.Repositories
             _dbSet = _dataContext.Set<TEntity>();
         }
 
-        public int Create(TEntity entity)
-        {
-            _dbSet.Add(entity);
-            return _dataContext.SaveChanges();
-        }
+        public void Create(TEntity entity) => _dbSet.Add(entity);
 
-        public int Delete(TEntity entity)
-        {
-            _dbSet.Remove(entity);
-            return _dataContext.SaveChanges();
-        }
-        public int Update(TEntity entity)
-        {
-            _dbSet.Update(entity);
-            return _dataContext.SaveChanges();
-        }
+        public void Delete(TEntity entity) => _dbSet.Remove(entity);
 
+        public void Update(TEntity entity) => _dbSet.Update(entity);
+   
         public TEntity? Get(int id) => _dbSet.Find(id);
         public IEnumerable<TEntity> GetAll() =>_dbSet.ToList();
-
     }
 }
