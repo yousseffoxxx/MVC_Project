@@ -16,5 +16,6 @@ namespace DataAccessLayer.Models
         public string Name { get; set; }
         [Display(Name= "Created At")]
         public DateTime CDate { get; set; }
+        public ICollection<Employee>? Employees { get; set; } = new List<Employee>();
     }
 }

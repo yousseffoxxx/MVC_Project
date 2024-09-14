@@ -16,7 +16,7 @@
         {
             // ViewData => Dictionary<String,object>
 
-            ViewData["Message"] = "Hello From viewData";
+            //ViewData["Message"] = "Hello From viewData";
 
             // Retrieve All Departments
             var departments = _repository.GetAll();
