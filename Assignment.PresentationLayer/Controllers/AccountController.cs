@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿global using Microsoft.AspNetCore.Identity;
 <<<<<<< HEAD
 using Assignment.PresentationLayer.Controllers;
@@ -116,3 +117,15 @@ namespace PresentationLayer.Controllers
         }
     }
 }
+=======
+﻿namespace PresentationLayer.Controllers
+{
+    public class AccountController : Controller
+    {
+        public IActionResult Register()
+        {
+            return View();
+        }
+    }
+}
+>>>>>>> b22143d (Part 03 Auth Layout Setup)
