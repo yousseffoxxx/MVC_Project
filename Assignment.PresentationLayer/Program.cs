@@ -26,6 +26,9 @@ namespace Assignment.PresentationLayer
 
             builder.Services.AddScoped<IUnitOfWork,UnitOfWorkRepository>();
 
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<DataContext>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
