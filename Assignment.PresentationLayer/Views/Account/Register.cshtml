@@ -1,16 +1,10 @@
-<<<<<<< HEAD
-﻿@model RegisterViewModel
-
-=======
-﻿
->>>>>>> b22143d (Part 03 Auth Layout Setup)
+@model RegisterViewModel
 @{
     ViewData["Title"] = "Register";
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
 }
 <div class="main-agileinfo">
 	<div class="agileits-top">
-<<<<<<< HEAD
 		<form asp-action="Register" method="post">
 			<div asp-validation-summary="All"></div>
 			<input class="text" type="text" asp-for="FristName" placeholder="FristName" required="">
@@ -35,23 +29,11 @@
 			<div class="wthree-text">
 				<label class="anim">
 					<input type="checkbox"asp-for="IsAgree" class="checkbox" required="">
-=======
-		<form action="#" method="post">
-			<input class="text" type="text" name="Username" placeholder="Username" required="">
-			<input class="text email" type="email" name="email" placeholder="Email" required="">
-			<input class="text" type="password" name="password" placeholder="Password" required="">
-			<input class="text w3lpass" type="password" name="password" placeholder="Confirm Password" required="">
-			<div class="wthree-text">
-				<label class="anim">
-					<input type="checkbox" class="checkbox" required="">
->>>>>>> b22143d (Part 03 Auth Layout Setup)
-					<span>I Agree To The Terms & Conditions</span>
 				</label>
 				<div class="clear"> </div>
 			</div>
 			<input type="submit" value="SIGNUP">
 		</form>
-<<<<<<< HEAD
 		<p>Do You have an Account? <a asp-action="Login"> Login Now!</a></p>
 	</div>
 </div>
@@ -61,8 +43,4 @@
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 }
-=======
 		<p>Don't have an Account? <a href="#"> Login Now!</a></p>
-	</div>
-</div>
->>>>>>> b22143d (Part 03 Auth Layout Setup)
