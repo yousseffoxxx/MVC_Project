@@ -108,7 +108,7 @@ namespace PresentationLayer.Controllers
                     Recipient = model.Email
                 };
                 // Send Email
-
+                MailSettings.SendEmail(email);
                 // Redirect to Check Your Inbox
                 return RedirectToAction(nameof(CheckYourInbox));
             }
