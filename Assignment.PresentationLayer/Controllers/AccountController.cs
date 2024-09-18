@@ -9,9 +9,10 @@ namespace PresentationLayer.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-		public AccountController(UserManager<ApplicationUser> userManager)
+		public AccountController(UserManager<ApplicationUser> userManager , SignInManager<ApplicationUser> signInManager)
 		{
 			_userManager = userManager;
+            _signInManager = signInManager;
 		}
 
 		public IActionResult Register()
@@ -73,6 +74,12 @@ namespace PresentationLayer.Controllers
             }
             ModelState.AddModelError(string.Empty, "Incorrect Email Or Password");
             return View(model);
+        }
+
+        public new IActionResult SignOut()
+        {
+            _signInManager.SignOutAsync();
+            return RedirectToAction(nameof(Login));
         }
     }
 }

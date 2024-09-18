@@ -1,5 +1,6 @@
 ﻿namespace PresentationLayer.Controllers
 {
+    [Authorize]
     public class EmployeesController : Controller
     {
         private readonly IMapper _mapper;
@@ -10,8 +11,8 @@
             _mapper = mapper;
         }
 
-
-        [HttpGet]        
+        [HttpGet]
+        [AllowAnonymous]
         public IActionResult Index(string? searchValue)
         {
             var employees = Enumerable.Empty<Employee>();
@@ -35,13 +36,14 @@
         }
 
         [HttpPost]
-        public IActionResult Create(EmployeeViewModel employeeVM)
+		[ValidateAntiForgeryToken]
+		public IActionResult Create(EmployeeViewModel employeeVM)
         {
 
-            if (!ModelState.IsValid) return View(employeeVM);
+            //if (!ModelState.IsValid) return View(employeeVM);
 
             if(employeeVM.Image is not null)
-                employeeVM.ImageNamep = DocumentSittings.UploadFile(employeeVM.Image , "images");
+                employeeVM.ImageName = DocumentSittings.UploadFile(employeeVM.Image , "images");
            
             var employee = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
             
@@ -52,7 +54,6 @@
         }
 
         public IActionResult Details(int? id) => EmployeeControllerHandler(id, nameof(Details));
-
         public IActionResult Edit(int? id) => EmployeeControllerHandler(id, nameof(Edit));
 
         [HttpPost]
@@ -68,7 +69,7 @@
             try
             {
                 if (employeeVM.Image is not null)
-                    employeeVM.ImageNamep = DocumentSittings.UploadFile(employeeVM.Image, "images");
+                    employeeVM.ImageName = DocumentSittings.UploadFile(employeeVM.Image, "images");
 
                 var employee = _mapper.Map<EmployeeViewModel,Employee>(employeeVM);
 
@@ -87,7 +88,8 @@
 
         public IActionResult Delete(int? id) => EmployeeControllerHandler(id, nameof(Delete));
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
 
         public IActionResult ConfirmDelete(int? id)
