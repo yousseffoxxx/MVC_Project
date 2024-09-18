@@ -40,9 +40,9 @@
 		public IActionResult Create(EmployeeViewModel employeeVM)
         {
 
-            //if (!ModelState.IsValid) return View(employeeVM);
+            if (!ModelState.IsValid) return View(employeeVM);
 
-            if(employeeVM.Image is not null)
+            if (employeeVM.Image is not null)
                 employeeVM.ImageName = DocumentSittings.UploadFile(employeeVM.Image , "images");
            
             var employee = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);

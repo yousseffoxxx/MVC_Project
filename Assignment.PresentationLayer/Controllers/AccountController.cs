@@ -81,5 +81,47 @@ namespace PresentationLayer.Controllers
             _signInManager.SignOutAsync();
             return RedirectToAction(nameof(Login));
         }
+
+        public IActionResult ForgetPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ForgetPassword(ForgetPasswordViewModel model)
+        {
+            if(!ModelState.IsValid) return View(model);
+            // Check if user Exists
+            var user = _userManager.FindByEmailAsync(model.Email).Result;
+            if (user is not null)
+            {
+                // Create Reset Password token
+                var token = _userManager.GeneratePasswordResetTokenAsync(user).Result;
+                // Create URl to Reset Password
+                var url = Url.Action(nameof(ResetPassword), nameof(AccountController).Replace("Controller", string.Empty),
+                    new { email = model.Email, Token = token }, Request.Scheme);
+                // Creare Emsil Object
+                var email = new Email
+                {
+                    Subject = "Reset Pssword",
+                    Body = url!,
+                    Recipient = model.Email
+                };
+                // Send Email
+
+                // Redirect to Check Your Inbox
+                return RedirectToAction(nameof(CheckYourInbox));
+            }
+            ModelState.AddModelError(string.Empty, "User Not found");
+            return View(model);
+        }
+        public IActionResult CheckYourInbox()
+        {
+            return View();
+        }
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
     }
 }
