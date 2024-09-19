@@ -11,3 +11,5 @@ global using System.ComponentModel.DataAnnotations;
 global using PresentationLayer.ViewModels;
 global using AutoMapper;
 global using PresentationLayer.Utilities;
+global using PresentationLayer.Models;
+global using Microsoft.AspNetCore.Authorization;

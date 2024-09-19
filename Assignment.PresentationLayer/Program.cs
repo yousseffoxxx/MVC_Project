@@ -15,16 +15,17 @@ namespace Assignment.PresentationLayer
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            //builder.Services.AddScoped<IGenaricRepository<Department>, GenaricRepository<Department>>();
-
-            //builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
-
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
-
-            //builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-            //builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-
             builder.Services.AddScoped<IUnitOfWork,UnitOfWorkRepository>();
+
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<DataContext>()
+                .AddDefaultTokenProviders();
+
+            ///builder.Services.AddScoped<IGenaricRepository<Department>, GenaricRepository<Department>>();
+            ///builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
+            ///builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            ///builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
             var app = builder.Build();
 
