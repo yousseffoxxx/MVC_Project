@@ -9,7 +9,7 @@
 
             /*string folderPath = Directory.GetCurrentDirectory() + @"\wwwroot\Files";*/
 
-            string folderPath = Path.Combine(Directory.GetCurrentDirectory() , @"\wwwroot\Files" , folderName);
+            string folderPath = Path.Combine(Directory.GetCurrentDirectory() , @"wwwroot\Files" , folderName);
 
             // Create Unique Name for the File
 
@@ -33,7 +33,7 @@
 
         public static void DeleteFile(string folderName , string fileName)
         {
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), @"\wwwroot\Files", folderName, fileName);
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Files", folderName, fileName);
 
             if (File.Exists(filePath)) 
             {

@@ -43,10 +43,10 @@
             if (!ModelState.IsValid) return View(employeeVM);
 
             if (employeeVM.Image is not null)
-                employeeVM.ImageName = DocumentSittings.UploadFile(employeeVM.Image , "images");
+                employeeVM.ImageName = DocumentSittings.UploadFile(employeeVM.Image , "Images");
            
+
             var employee = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
-            
             _unitOfWork.Employees.Create(employee);
             _unitOfWork.SaveChanges();
 
@@ -62,10 +62,8 @@
         {
             if (id != employeeVM.Id) return BadRequest();
 
-            if (!ModelState.IsValid)
-            {
-                return View(employeeVM);
-            }
+            if (!ModelState.IsValid) return View(employeeVM);
+
             try
             {
                 if (employeeVM.Image is not null)
