@@ -1,6 +1,6 @@
 ﻿namespace PresentationLayer.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="Admin")]
     public class EmployeesController : Controller
     {
         private readonly IMapper _mapper;

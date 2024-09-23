@@ -2,7 +2,8 @@
 
 namespace PresentationLayer.Controllers
 {
-	public class UsersController : Controller
+    [Authorize(Roles = "Admin")]
+    public class UsersController : Controller
 	{
 		private readonly UserManager<ApplicationUser> _userManager;
 
