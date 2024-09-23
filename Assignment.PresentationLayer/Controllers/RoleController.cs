@@ -120,5 +120,54 @@ namespace PresentationLayer.Controllers
             return View();
 
         }
+
+        public async Task<IActionResult> AddOrRemoveUsers (string roleId)
+        {
+            var role = await _roleManager.FindByIdAsync (roleId);
+            if (role is null) return NotFound();
+
+            ViewBag.RoleId = roleId;
+
+            var users = await _userManager.Users.ToListAsync();
+            var usersInRole = new List<UserInRoleViewModel>();
+
+            foreach (var user in users)
+            {
+                var userInRole = new UserInRoleViewModel
+                {
+                    UserId = user.Id,
+                    UserName = user.UserName,
+                    IsInRole = await _userManager.IsInRoleAsync(user , role.Name)
+                };
+
+                usersInRole.Add(userInRole);
+            }
+
+            return View(usersInRole);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddOrRemoveUsers(string roleId, List<UserInRoleViewModel> users)
+        {
+            var role = await _roleManager.FindByIdAsync(roleId);
+            if (role is null) return NotFound();
+
+            if (ModelState.IsValid)
+            {
+                foreach (var user in users)
+                {
+                    var appUser = await _userManager.FindByIdAsync(user.UserId);
+                    if (appUser is null) return NotFound();
+
+                    if (user.IsInRole && !await _userManager.IsInRoleAsync(appUser, role.Name))
+                        await _userManager.AddToRoleAsync(appUser, role.Name);
+
+                    if (!user.IsInRole && await _userManager.IsInRoleAsync(appUser, role.Name))
+                        await _userManager.RemoveFromRoleAsync(appUser, role.Name);
+                }
+                return RedirectToAction(nameof(Edit), new { id = roleId });
+            }
+            return View(users);
+        }
     }
 }
