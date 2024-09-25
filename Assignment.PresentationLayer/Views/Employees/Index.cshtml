@@ -4,10 +4,6 @@
     // var employee2 = ViewData["Message"] as Employee;
 }
 
-@* <h1> @employee2.Name </h1> *@
-@* <h1> @ViewBag.Department.Name </h1> *@
-
-@* <h1 class="alert-success">@TempData["message"]</h1>*@
 
 <div>
     <a class="btn btn-primary me-3" asp-action="Create">Create New Employee</a>
@@ -67,7 +63,7 @@
                     }
                 </td>
 
-                <partial name="_ButtonsPartial" model="item.Id"></partial>
+                <partial name="_ButtonsPartial" model="item.Id.ToString()"></partial>
             </tr>
         }
     </tbody>

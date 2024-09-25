@@ -2,7 +2,7 @@
 {
     public static class DocumentSittings
     {
-        public static string UploadFile(IFormFile file , string folderName)
+        public static async Task<string> UploadFileAsync(IFormFile file , string folderName)
         {
             // Create Folder Path
             //  //E:/NewFolder/MvcDemoSln/Demo.PL/www.root/Files/folderName
@@ -26,7 +26,7 @@
 
             // Copy File to FileStream
 
-            file.CopyTo(stream);
+            await file.CopyToAsync(stream);
 
             return fileName;
         }

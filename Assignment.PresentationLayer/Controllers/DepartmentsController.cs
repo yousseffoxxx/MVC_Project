@@ -1,4 +1,5 @@
-﻿namespace PresentationLayer.Controllers
+﻿
+namespace PresentationLayer.Controllers
 {
     public class DepartmentsController : Controller
     {
@@ -14,12 +15,11 @@
         [HttpGet]
         public IActionResult Index()
         {
-            // ViewData => Dictionary<String,object>
-
-            //ViewData["Message"] = "Hello From viewData";
+            /// ViewData => Dictionary<String,object>
+            ///ViewData["Message"] = "Hello From viewData";
 
             // Retrieve All Departments
-            var departments = _repository.GetAll();
+            var departments = _repository.GetAllAsync();
             return View(departments);
         }
 
@@ -30,13 +30,13 @@
         {
             //server side validation
             if (! ModelState.IsValid) return View(department);
-            _repository.Create(department);
+            _repository.AddAsync(department);
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Details(int? id) => DepartmentControllerHandler(id, nameof(Details));
+        public async Task<IActionResult> Details(int? id) => await DepartmentControllerHandler(id, nameof(Details));
 
-        public IActionResult Edit(int? id) => DepartmentControllerHandler(id, nameof(Edit));
+        public async Task<IActionResult> Edit(int? id) => await DepartmentControllerHandler(id, nameof(Edit));
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -61,16 +61,16 @@
             return View(department);
         }
 
-        public IActionResult Delete(int? id) => DepartmentControllerHandler(id,nameof(Delete));
+        public async Task<IActionResult> DeleteAsync(int? id) => await DepartmentControllerHandler(id,nameof(DeleteAsync));
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult ConfirmDelete(int? id)
+        public async Task<IActionResult> ConfirmDelete(int? id)
         {
 
             if (!id.HasValue) return BadRequest();
 
-            var department = _repository.Get(id.Value);
+            var department = await _repository.GetAsync(id.Value);
 
             if (department is null) return NotFound();
 
@@ -87,12 +87,12 @@
             }
         }
 
-        private IActionResult DepartmentControllerHandler(int? id , string viewName)
+        private async Task<IActionResult> DepartmentControllerHandler(int? id , string viewName)
         {
 
             if (!id.HasValue) return BadRequest();
 
-            var department = _repository.Get(id.Value);
+            var department = await _repository.GetAsync(id.Value);
 
             if (department is null) return NotFound();
 

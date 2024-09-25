@@ -14,7 +14,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Assignment.PresentationLayer</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CRUD Operation System</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -33,14 +33,30 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Employees" asp-action="Index">Employees</a>
                         </li>
-                    </ul>
-                    <ul class="ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Account" asp-action="SignOut">SignOut</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
-                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Users" asp-action="Index">Users</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Role" asp-action="Index">Roles</a>
+                            </li>                            
+                        }
+                        @if (User.Identity.IsAuthenticated) // ==> True if Already loged in
+                        {
+                            <li class="nav-item ms-auto">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="SignOut">LogOut</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item ms-auto">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item ms-auto">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

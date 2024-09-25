@@ -2,7 +2,7 @@
 {
     public interface IEmployeeRepository : IGenaricRepository<Employee>
     {
-        public IEnumerable<Employee> GetAll(string name);
-        public IEnumerable<Employee> GetAllWithDepartment();
+        public Task<IEnumerable<Employee>> GetAllAsync(string name);
+        public Task<IEnumerable<Employee>> GetAllWithDepartmentAsync();
     }
 }
