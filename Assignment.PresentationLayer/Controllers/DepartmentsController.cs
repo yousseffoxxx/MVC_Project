@@ -1,56 +1,63 @@
-﻿
-namespace PresentationLayer.Controllers
+﻿namespace PresentationLayer.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class DepartmentsController : Controller
     {
-        //private IGenaricRepository<Department> _repository;
 
-        private IDepartmentRepository _repository;
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DepartmentsController(IDepartmentRepository Repository)
+        public DepartmentsController( IMapper mapper, IUnitOfWork unitOfWork)
         {
-            _repository = Repository;
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            /// ViewData => Dictionary<String,object>
-            ///ViewData["Message"] = "Hello From viewData";
-
             // Retrieve All Departments
-            var departments = _repository.GetAllAsync();
+            var departments =await  _unitOfWork.Departments.GetAllAsync();
+            var departmentViewModel = _mapper.Map<IEnumerable<Department>, IEnumerable<DepartmentViewModel>>(departments);
+
             return View(departments);
         }
 
         public IActionResult Create() => View();
 
         [HttpPost]
-        public IActionResult Create(Department department) 
+        public async Task<IActionResult> CreateAsync(DepartmentViewModel departmentVM) 
         {
             //server side validation
-            if (! ModelState.IsValid) return View(department);
-            _repository.AddAsync(department);
+            if (! ModelState.IsValid) return View(departmentVM);
+            var department = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
+
+            await _unitOfWork.Departments.AddAsync(department);
+            await _unitOfWork.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Details(int? id) => await DepartmentControllerHandler(id, nameof(Details));
-
         public async Task<IActionResult> Edit(int? id) => await DepartmentControllerHandler(id, nameof(Edit));
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute]int id,Department department)
+        public async Task<IActionResult> EditAsync([FromRoute]int id, DepartmentViewModel departmentVM)
         {
-            if (id != department.Id) return BadRequest();
+            if (id != departmentVM.Id) return BadRequest();
 
-            if (!ModelState.IsValid)
-            {
-                return View(department);
-            }
+            if (!ModelState.IsValid) return View(departmentVM);
+
             try
             {
-                _repository.Update(department);
+                var department = _mapper.Map<DepartmentViewModel, Department>(departmentVM);
+
+                _unitOfWork.Departments.Update(department);
+
+                if (await _unitOfWork.SaveChangesAsync() > 0)
+                    TempData["Message"] = "Employee Updated Successfuly";
+
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -58,10 +65,10 @@ namespace PresentationLayer.Controllers
                 // log Exception
                 ModelState.AddModelError("", ex.Message);
             }
-            return View(department);
+            return View(departmentVM);
         }
 
-        public async Task<IActionResult> DeleteAsync(int? id) => await DepartmentControllerHandler(id,nameof(DeleteAsync));
+        public async Task<IActionResult> Delete(int? id) => await DepartmentControllerHandler(id,nameof(Delete));
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -70,13 +77,15 @@ namespace PresentationLayer.Controllers
 
             if (!id.HasValue) return BadRequest();
 
-            var department = await _repository.GetAsync(id.Value);
+            var department = await _unitOfWork.Departments.GetAsync(id.Value);
 
             if (department is null) return NotFound();
 
             try
             {
-                _repository.Delete(department);
+                _unitOfWork.Departments.Delete(department);
+                await _unitOfWork.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -92,9 +101,11 @@ namespace PresentationLayer.Controllers
 
             if (!id.HasValue) return BadRequest();
 
-            var department = await _repository.GetAsync(id.Value);
+            var department = await _unitOfWork.Departments.GetAsync(id.Value);
 
             if (department is null) return NotFound();
+            var departmentVM = _mapper.Map<DepartmentViewModel>(department);
+
 
             return View(viewName, department);
         }
