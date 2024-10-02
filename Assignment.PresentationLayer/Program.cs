@@ -8,7 +8,6 @@ namespace Assignment.PresentationLayer
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            //builder.Services.AddScoped<DataContext>();
 
             builder.Services.AddDbContext<DataContext>(options =>
             {
