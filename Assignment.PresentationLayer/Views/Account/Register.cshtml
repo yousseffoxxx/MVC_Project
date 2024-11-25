@@ -1,0 +1,48 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+<div class="main-agileinfo">
+	<div class="agileits-top">
+		<form asp-action="Register" method="post">
+			<div asp-validation-summary="All"></div>
+			<input class="text" type="text" asp-for="FristName" placeholder="FristName" required="">
+			<span asp-validation-for="FristName" class="text-danger"></span>
+			<br />
+			<input class="text" type="text" asp-for="LastName" placeholder="LastName" required="">
+			<span asp-validation-for="LastName" class="text-danger"></span>
+			<br />
+			<input class="text" type="text" asp-for="UserName" placeholder="Username" required="">
+			<span asp-validation-for="UserName" class="text-danger"></span>
+			<br />
+			<input class="text" type="text" asp-for="Email" placeholder="Email" required="">
+			<span asp-validation-for="Email" class="text-danger"></span>
+			<br />
+			<input class="text" asp-for="Password" placeholder="Password" required="">
+			<span asp-validation-for="Password" class="text-danger"></span>
+			<br />
+			<input class="text" asp-for="ConfirmPassword" placeholder="ConfirmPassword" required="">
+			<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+			<br />
+			
+			<div class="wthree-text">
+				<label class="anim">
+					<input type="checkbox"asp-for="IsAgree" class="checkbox" required="">
+					<span>Accept the Conditions</span>
+
+				</label>
+				<div class="clear"> </div>
+			</div>
+			<input type="submit" value="SIGNUP">
+		</form>
+		<p>Do You have an Account? <a asp-action="Login"> Login Now!</a></p>
+	</div>
+</div>
+
+@section Validation{
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
+		<p>Don't have an Account? <a href="#"> Login Now!</a></p>
